@@ -3,7 +3,11 @@ import Head from 'next/head'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 
-const Home: NextPage = () => {
+type HomeProps = {
+  envTest: string
+}
+
+const Home: NextPage<HomeProps> = ({ envTest }) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -39,10 +43,13 @@ const Home: NextPage = () => {
           </Link>
 
           <a href="./api/hello" target="_blank">
-            <a>
-              <h2>API DEMO &rarr;</h2>
-              <p>API DEMO</p>
-            </a>
+            <h2>API DEMO &rarr;</h2>
+            <p>API DEMO</p>
+          </a>
+
+          <a href="#">
+            <h2>Environment Variable DEMO</h2>
+            <p>ENV_TEST: {envTest}</p>
           </a>
 
           <a
@@ -65,6 +72,14 @@ const Home: NextPage = () => {
       </footer>
     </div>
   )
+}
+
+export const getStaticProps = async () => {
+  return {
+    props: {
+      envTest: process.env.NEXT_PUBLIC_ENV_TEST ?? 'undefined',
+    },
+  }
 }
 
 export default Home
