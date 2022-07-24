@@ -1,0 +1,18 @@
+projects:
+  nextverceldemo:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - src/graphql/**/*.ts
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: typescript
+        generatedFileName: src/graphql/API.ts
+        docsFilePath: src/graphql
+        maxDepth: 2
+extensions:
+  amplify:
+    version: 3
+  nextverceldemoe6de1e91:
+    version: 3

@@ -1,0 +1,6 @@
+{
+  "AppSyncApiName": "nextverceldemo",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnablePointInTimeRecovery": true,
+  "DynamoDBEnableServerSideEncryption": false
+}

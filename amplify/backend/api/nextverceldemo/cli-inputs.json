@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "nextverceldemo",
+    "serviceName": "AppSync",
+    "gqlSchemaPath": "/Users/yanagyu/Workspace/tmp/next-vercel-demo/amplify/backend/api/nextverceldemo/schema.graphql",
+    "defaultAuthType": {
+      "mode": "AWS_IAM"
+    },
+    "conflictResolution": {},
+    "additionalAuthTypes": []
+  }
+}

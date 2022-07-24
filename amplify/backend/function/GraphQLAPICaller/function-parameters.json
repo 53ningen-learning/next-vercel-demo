@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "api": {
+      "nextverceldemo": [
+        "Query",
+        "Mutation",
+        "Subscription"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}
