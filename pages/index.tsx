@@ -42,7 +42,7 @@ const Home: NextPage<HomeProps> = ({ envTest }) => {
             </a>
           </Link>
 
-          <a href="./api/hello" target="_blank">
+          <a href="./api/listTodos" target="_blank">
             <h2>API DEMO &rarr;</h2>
             <p>API DEMO</p>
           </a>

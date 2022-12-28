@@ -1,13 +1,17 @@
+import { API, graphqlOperation } from 'aws-amplify'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
+import { Todo } from '../../src/graphql/API'
+import * as queries from '../../src/graphql/queries'
 import styles from '../../styles/Home.module.css'
 
 interface Props {
   buildDate: String
+  data: String
 }
 
-const ISR: NextPage<Props> = ({ buildDate }: Props) => {
+const ISR: NextPage<Props> = ({ buildDate, data }: Props) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -20,11 +24,10 @@ const ISR: NextPage<Props> = ({ buildDate }: Props) => {
           ISR(Incremental Static Regeneration) DEMO
         </h1>
         <p className={styles.description}>Builded at: {buildDate}</p>
-        <p className={styles.description}>
-          <h2>
-            <Link href="/">&larr; HOME</Link>
-          </h2>
-        </p>
+        <p className={styles.description}>Data: {data}</p>
+        <h2 className={styles.description}>
+          <Link href="/">&larr; HOME</Link>
+        </h2>
       </main>
 
       <footer className={styles.footer}>
@@ -40,8 +43,16 @@ const ISR: NextPage<Props> = ({ buildDate }: Props) => {
 }
 
 export async function getStaticProps() {
+  const res = await API.graphql(graphqlOperation(queries.listTodos))
+  if ('errors' in res) {
+    throw new Error(JSON.stringify(res.errors))
+  } else if (!('data' in res && res.data.listTodos)) {
+    throw new Error(`invalid response: ${res}`)
+  }
+  const tds = res.data.listTodos.items as [Todo]
   const props: Props = {
     buildDate: new Date().toLocaleString('ja-JP'),
+    data: JSON.stringify(tds),
   }
   return {
     props,
