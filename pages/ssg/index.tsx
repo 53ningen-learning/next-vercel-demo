@@ -1,5 +1,5 @@
 import { API, graphqlOperation } from 'aws-amplify'
-import type { NextPage } from 'next'
+import type { GetStaticProps, NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -9,25 +9,17 @@ import styles from '../../styles/Home.module.css'
 
 interface Props {
   buildDate: String
+  tasks: Todo[]
 }
 
-const SSG: NextPage<Props> = ({ buildDate }: Props) => {
+const SSG: NextPage<Props> = ({ buildDate, tasks }: Props) => {
   const [todos, setTodos] = useState<[Todo]>()
   useEffect(() => {
-    const getTodos = async () => {
-      const res = await API.graphql(graphqlOperation(queries.listTodos))
-      console.log(JSON.stringify(res))
-      if ('errors' in res) {
-        throw new Error(JSON.stringify(res.errors))
-      } else if (!('data' in res && res.data.listTodos)) {
-        throw new Error(`invalid response: ${res}`)
-      } else {
-        const tds = res.data.listTodos.items as [Todo]
-        setTodos(tds)
-      }
-    }
     if (todos === undefined) {
-      getTodos()
+      ;(async () => {
+        const res = await getTodos()
+        setTodos(res)
+      })()
     }
   }, [todos])
   return (
@@ -39,8 +31,8 @@ const SSG: NextPage<Props> = ({ buildDate }: Props) => {
 
       <main>
         <h1 className={styles.title}>SSG(Static Site Generate) Demo</h1>
-
         <p className={styles.description}>Builded at: {buildDate}</p>
+        <p className={styles.description}>Data: {JSON.stringify(tasks)}</p>
 
         <h1 className={styles.title}>CSR(Client Side Rendering) Demo</h1>
 
@@ -63,8 +55,10 @@ const SSG: NextPage<Props> = ({ buildDate }: Props) => {
   )
 }
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const tasks = await getTodos()
   const props: Props = {
+    tasks,
     buildDate: new Date().toLocaleString('ja-JP'),
   }
   return {
@@ -73,3 +67,15 @@ export async function getStaticProps() {
 }
 
 export default SSG
+
+const getTodos = async () => {
+  const res = await API.graphql(graphqlOperation(queries.listTodos))
+  if ('errors' in res) {
+    throw new Error(JSON.stringify(res.errors))
+  } else if (!('data' in res && res.data.listTodos)) {
+    throw new Error(`invalid response: ${res}`)
+  } else {
+    const tds = res.data.listTodos.items as [Todo]
+    return tds
+  }
+}
